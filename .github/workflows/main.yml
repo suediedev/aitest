@@ -33,7 +33,7 @@ jobs:
 
     - name: Compile with Nuitka
       run: |
-        python -m nuitka --onefile --assume-yes-for-downloads --output-dir=dist main.py
+        python -m nuitka --onefile --assume-yes-for-downloads --output-dir=dist --enable-plugin=tk-inter --module-parameter=torch-disable-jit=no main.py
 
     - name: Upload compiled artifact
       uses: actions/upload-artifact@v3
