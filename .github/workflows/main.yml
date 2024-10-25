@@ -21,13 +21,6 @@ jobs:
       with:
         python-version: '3.12'  # Specify the Python version you need
 
-    - name: Download and Install Clang
-      run: |
-        Invoke-WebRequest -Uri https://github.com/llvm/llvm-project/releases/download/llvmorg-16.0.0/LLVM-16.0.0-win64.exe -OutFile llvm.zip
-        Expand-Archive -Path llvm.zip -DestinationPath C:\llvm
-        $env:Path += ";C:\llvm\bin"
-      shell: powershell
-
     - name: Install PyTorch
       run: |
         python -m pip install --upgrade pip
