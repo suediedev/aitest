@@ -19,19 +19,14 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
-        python-version: '3.8'  # Specify the Python version you need
+        python-version: '3.12'  # Specify the Python version you need
 
-    - name: Install Chocolatey
+    - name: Download and Install Clang
       run: |
-        Set-ExecutionPolicy Bypass -Scope Process -Force; \
-        [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; \
-        iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+        Invoke-WebRequest -Uri https://github.com/llvm/llvm-project/releases/download/llvmorg-16.0.0/LLVM-16.0.0-win64.exe -OutFile llvm.zip
+        Expand-Archive -Path llvm.zip -DestinationPath C:\llvm
+        $env:Path += ";C:\llvm\bin"
       shell: powershell
-
-    - name: Install Visual Studio Build Tools
-      run: |
-        choco install visualstudio2019buildtools --package-parameters "--add Microsoft.VisualStudio.Workload.VCTools --includeRecommended --includeOptional" -y
-      shell: cmd
 
     - name: Install PyTorch
       run: |
@@ -48,7 +43,7 @@ jobs:
         python -m nuitka --onefile --assume-yes-for-downloads --output-dir=dist main.py
 
     - name: Upload compiled artifact
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v3
       with:
         name: compiled-app
         path: dist/main.exe  # Adjust the path if necessary
